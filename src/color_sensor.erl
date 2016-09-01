@@ -85,6 +85,5 @@ set_lego_color_mode(ColorMode) ->
 
 get_color_code_value(FileLocation) ->
     {ok, StringContent} = file:read_file(FileLocation),
-    Content = string:sub_string(binary_to_list(StringContent), 1,
-                      string:len(binary_to_list(StringContent))-1),
+    Content = re:replace(StringContent, "\n", "", [{return, list}]),
     list_to_integer(Content).
