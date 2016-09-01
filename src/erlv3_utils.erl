@@ -7,26 +7,25 @@
 
 find_tacho_motor(Side) ->
   {ok, Port} = application:get_env(erlv3, {motor, Side}),
-  find_dir(Port, find_dirs("tacho_motor")).
+  find_dir(Port, "address", find_dirs("tacho_motor")).
 
 find_color_sensor() ->
-  {ok, Port} = application:get_env(erlv3, color_sensor),
-  find_dir(Port, find_dirs("lego-sensor")).
+  find_dir('lego-ev3-touch', "driver_name", find_dirs("lego-sensor")).
 
 find_dirs(TopDir) ->
   filelib:wildcard(filename:join([?CLASS_PATH, TopDir, "*"])).
 
-find_dir(_Port, []) ->
+find_dir(_Value, _File, []) ->
   {error, not_found};
-find_dir(Port, [Dir | T]) ->
-  case file:read_file(filename:join([Dir, "address"])) of
+find_dir(Value, File, [Dir | T]) ->
+  case file:read_file(filename:join([Dir, File])) of
     {ok, Data} ->
       case binary_to_atom(Data, utf8) of
-        Port ->
+        Value ->
           Dir;
         _ ->
-          find_dir(Port, T)
+          find_dir(Value, File, T)
       end;
     {error, _} ->
-      find_dir(Port, T)
+      find_dir(Value, File, T)
   end.
