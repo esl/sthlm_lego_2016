@@ -11,6 +11,9 @@ find_tacho_motor(Side) ->
   find_dir(Port, "address", find_dirs("tacho_motor")).
 
 find_color_sensor() ->
+  find_dir('lego-ev3-color', "driver_name", find_dirs("lego-sensor")).
+
+find_bump_sensor() ->
   find_dir('lego-ev3-touch', "driver_name", find_dirs("lego-sensor")).
 
 find_dirs(TopDir) ->
