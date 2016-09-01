@@ -8,7 +8,7 @@
 find_tacho_motor(Side) ->
   {ok, Envs} = application:get_env(erlv3, motor),
   Port = proplists:get_value(Side, Envs),
-  find_dir(Port, "address", find_dirs("tacho_motor")).
+  find_dir(Port, "address", find_dirs("tacho-motor")).
 
 find_color_sensor() ->
   find_dir('lego-ev3-color', "driver_name", find_dirs("lego-sensor")).
