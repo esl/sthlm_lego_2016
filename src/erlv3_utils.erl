@@ -6,7 +6,8 @@
          find_color_sensor/0]).
 
 find_tacho_motor(Side) ->
-  {ok, Port} = application:get_env(erlv3, {motor, Side}),
+  {ok, Envs} = application:get_env(erlv3),
+  Port = proplists:get_value({motor, Side}, Envs),
   find_dir(Port, "address", find_dirs("tacho_motor")).
 
 find_color_sensor() ->
