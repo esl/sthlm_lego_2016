@@ -1,0 +1,9 @@
+{application, erlv3,
+             [{description, "A lego robot controller by ESL Stockholm."},
+              {vsn, "1.0.0"},
+              {modules, [erlv3_app, erlv3_sup, erlv3_server]},
+              {registered, [erlv3_sup, erlv3_server]},
+              {applications, [kernel, stdlib]},
+              {mod, {erlv3_app, []}},
+              {env, [{}]}
+]}.
