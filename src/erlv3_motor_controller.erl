@@ -38,28 +38,32 @@ hold(Motor) -> gen_server:call(Motor, hold).
 %% Callbacks.
 
 init(Side) ->
-    {ok,IdPath} = erlv3_util:find_tacho_motor(Side),
+    {ok,IdPath} = erlv3_utils:find_tacho_motor(Side),
     St0 = #motor{side=Side, id_path=IdPath, type=tacho},
     St1 = set_paths(St0),
     {ok,St1}.
 
 terminate(_R, _St) ->
     ok.
+
 handle_call(duty_cycle_sp, _From, St) ->
-    file:read_file(St#motor.duty_cycle_path);
+    {reply,file:read_file(St#motor.duty_cycle_path),St};
 handle_call({set_duty_cycle_sp,Pct}, _From, St) ->
-    file:write_file(St#motor.duty_cycle_path, integer_to_list(Pct));
+    {reply,file:write_file(St#motor.duty_cycle_path, integer_to_list(Pct)),St};
 handle_call(run, _From, St) ->
-    file:write_file(St#motor.command_path, "run-forever");
+    {reply,file:write_file(St#motor.command_path, "run-forever"),St};
 handle_call(coast, _From, St) ->
     file:write_file(St#motor.stop_action_path, "coast"),
-    file:write_file(St#motor.command_path, "stop");
+    file:write_file(St#motor.command_path, "stop"),
+    {reply,ok,St};
 handle_call(brake, _From, St) ->
     file:write_file(St#motor.stop_action_path, "brake"),
-    file:write_file(St#motor.command_path, "stop");
+    file:write_file(St#motor.command_path, "stop"),
+    {reply,ok,St};
 handle_call(hold, _From, St) ->
     file:write_file(St#motor.stop_action_path, "hold"),
-    file:write_file(St#motor.command_path, "stop").
+    file:write_file(St#motor.command_path, "stop"),
+    {reply,ok,St}.
 
 %% Set the paths.
 set_paths(#motor{id_path=IdPath}=St) ->
