@@ -1,4 +1,4 @@
--module(erlv3_motor).
+-module(erlv3_motor_controller).
 
 -export([start_link/1,
 	 duty_cycle_sp/1,set_duty_cycle_sp/2,
