@@ -2,7 +2,8 @@
 
 -define(CLASS_PATH, "/sys/class").
 
--compile(export_all).
+-export([find_tacho_motor/1,
+         find_color_sensor/0]).
 
 find_tacho_motor(Side) ->
   {ok, Port} = application:get_env(erlv3, {motor, Side}),
