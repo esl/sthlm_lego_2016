@@ -6,8 +6,8 @@
          find_color_sensor/0]).
 
 find_tacho_motor(Side) ->
-  {ok, Envs} = application:get_env(erlv3),
-  Port = proplists:get_value({motor, Side}, Envs),
+  {ok, Envs} = application:get_env(erlv3, motor),
+  Port = proplists:get_value(Side, Envs),
   find_dir(Port, "address", find_dirs("tacho_motor")).
 
 find_color_sensor() ->
@@ -21,11 +21,10 @@ find_dir(_Value, _File, []) ->
 find_dir(Value, File, [Dir | T]) ->
   case file:read_file(filename:join([Dir, File])) of
     {ok, Data} ->
-      case binary_to_atom(Data, utf8) of
-        Value ->
-          Dir;
-        _ ->
-          find_dir(Value, File, T)
+      ValueBin = atom_to_binary(Value, utf8),
+      case binary:match(Data, ValueBin) of
+        {0, _} -> Dir;
+        _ -> find_dir(Value, File, T)
       end;
     {error, _} ->
       find_dir(Value, File, T)
